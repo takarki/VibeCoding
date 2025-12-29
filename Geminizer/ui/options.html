@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geminizer Settings</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Geminizer 設定 (Settings)</h1>
+            <button id="add-btn" class="btn btn-primary">新規追加 (Add New)</button>
+        </header>
+
+        <div id="prompt-list" class="prompt-list">
+            <!-- Prompts will be inserted here -->
+        </div>
+
+        <!-- Gemini UI改善設定 -->
+        <section id="gemini-ui-enhancements" class="settings-section">
+            <h2>Gemini UI改善設定</h2>
+            <div class="settings-group">
+                <div class="form-group">
+                    <label>Enterキーの動作変更</label>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="gemini-enter-key">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">有効にすると、Enter=改行、Shift+Enter/Ctrl+Enter=送信になります</span>
+                    </div>
+                </div>
+                <div class="form-group" id="gemini-submit-key-modifier-group">
+                    <label for="gemini-submit-key-modifier">送信キー修飾子</label>
+                    <select id="gemini-submit-key-modifier" class="form-control">
+                        <option value="shift">Shift + Enter</option>
+                        <option value="ctrl">Ctrl + Enter</option>
+                    </select>
+                    <p class="help-text">Enterキーと組み合わせて送信する修飾キーを選択します</p>
+                </div>
+                <div class="form-group">
+                    <label>ツールショートカット</label>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="gemini-tool-shortcuts">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">有効にすると、DeepResearch、Canvas、NanoBananaへのショートカットボタンが表示されます</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>コンテンツ幅のカスタマイズ</label>
+                    <div class="toggle-group">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="gemini-layout-width-enabled">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span class="toggle-label">有効にすると、Geminiのコンテンツ幅をカスタマイズできます</span>
+                    </div>
+                </div>
+                <div class="form-group" id="gemini-layout-width-group" style="display: none;">
+                    <label for="gemini-layout-width-value">コンテンツ幅 (px)</label>
+                    <input type="number" id="gemini-layout-width-value" class="form-control" min="760" max="2000"
+                        value="1200">
+                    <p class="help-text">コンテンツの最大幅を指定します（760px以上）</p>
+                </div>
+                <div class="form-group">
+                    <label>デフォルト・モデルモード (Gemini 3)</label>
+                    <div class="radio-group">
+                        <label class="radio-inline">
+                            <input type="radio" name="gemini-model-mode" value="fast"> 高速モード (Fast)
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="gemini-model-mode" value="thinking" checked> 思考モード (Thinking)
+                        </label>
+                        <label class="radio-inline">
+                            <input type="radio" name="gemini-model-mode" value="pro"> Pro
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <h2>プロンプト編集</h2>
+            <div class="form-group">
+                <label for="title">タイトル</label>
+                <input type="text" id="title" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="target-ai">対象AI</label>
+                <select id="target-ai" class="form-control">
+                    <option value="gemini">Gemini</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>ページコンテンツの取得 (Page Content Extraction)</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="use-page-content">
+                    <label for="use-page-content">ページのテキスト内容を抽出してプロンプトに含める</label>
+                </div>
+                <p class="help-text">有効にすると、ページ内のテキスト（記事本文、説明文など）を自動的に抽出し、{{content}}変数に含めます。無効の場合は、URLとタイトルのみを使用します。
+                </p>
+            </div>
+            <div class="form-group">
+                <label>Enterキーで自動実行 (Auto-execute with Enter key)</label>
+                <div class="toggle-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="auto-execute">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">有効にすると、プロンプト入力後に自動的にEnterキーを押して実行します</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>モデルモード (Model Mode)</label>
+                <div class="radio-group">
+                    <label class="radio-inline">
+                        <input type="radio" name="edit-model-mode" value="fast"> 高速
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="edit-model-mode" value="thinking"> 思考
+                    </label>
+                    <label class="radio-inline">
+                        <input type="radio" name="edit-model-mode" value="pro"> Pro
+                    </label>
+                    <p class="help-text">プロンプト実行時にこのモードを優先します</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="edit-default-mode">デフォルトモード (Default Mode)</label>
+                <select id="edit-default-mode" class="form-control">
+                    <option value="url">URL - リンクとタイトルのみを送信</option>
+                    <option value="text">Text - ページ本文を抽出して送信</option>
+                    <option value="capture">Capture - スクリーンショットを取得</option>
+                </select>
+                <p class="help-text">このプロンプトを選択した際に自動的に選ばれるモードです。</p>
+            </div>
+            <div class="form-group">
+                <label>実行時にツールを自動アクティブ化 (Auto-activate Tool)</label>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="edit-tool-deep-research">
+                    <label for="edit-tool-deep-research">Deep Research</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="edit-tool-canvas">
+                    <label for="edit-tool-canvas">Canvas</label>
+                </div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="edit-tool-nanobanana">
+                    <label for="edit-tool-nanobanana">NanoBanana</label>
+                </div>
+                <p class="help-text">プロンプト実行時に、選択したツールを自動的にアクティブにします。複数選択可能です。</p>
+            </div>
+            <div class="form-group">
+                <label for="shortcut-key">ショートカットキー (Keyboard Shortcut)</label>
+                <div class="shortcut-input-group">
+                    <input type="text" id="shortcut-key" class="form-control shortcut-input"
+                        placeholder="ショートカットキーを押してください" readonly>
+                    <button type="button" id="clear-shortcut-btn" class="btn btn-secondary"
+                        style="display: none;">クリア</button>
+                </div>
+                <p class="help-text">このプロンプトを実行するショートカットキーを設定できます。入力欄をクリックしてから、設定したいキーの組み合わせを押してください。</p>
+                <div id="shortcut-conflict-warning" class="shortcut-warning" style="display: none;">
+                    <span class="warning-icon">⚠️</span>
+                    <span class="warning-text">このショートカットキーはChromeのデフォルトショートカットまたは他の拡張機能と競合している可能性があります。</span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="content">プロンプト (変数: {{url}}, {{title}}, {{content}})</label>
+                <textarea id="content" class="form-control"></textarea>
+            </div>
+            <div id="save-message" class="save-message" style="display: none;">
+                <span class="save-message-icon">✓</span>
+                <span class="save-message-text">保存されました</span>
+            </div>
+            <div class="modal-actions">
+                <button id="cancel-btn" class="btn btn-secondary">キャンセル</button>
+                <button id="save-btn" class="btn btn-primary">保存</button>
+            </div>
+        </div>
+    </div>
+    <script src="../prompts/bundled.js"></script>
+    <script type="module" src="options.js"></script>
+</body>
+
+</html>

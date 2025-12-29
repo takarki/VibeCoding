@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geminizer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-area">
+        <img src="../icons/logo48.png" alt="Logo" class="logo">
+        <h1>Geminizer</h1>
+      </div>
+      <div class="header-actions">
+        <button id="help-btn" class="icon-btn" title="ヘルプ (Help)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </button>
+        <button id="options-btn" class="icon-btn" title="設定 (Settings)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path
+              d="M12 1v6m0 6v6m-6-6h6m6 0h-6M4.93 4.93l4.24 4.24m5.66 5.66l4.24 4.24M4.93 19.07l4.24-4.24m5.66-5.66l4.24-4.24">
+            </path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="form-group">
+        <label for="prompt-select" class="label-text">プロンプト (Prompt)</label>
+        <select id="prompt-select">
+          <option value="" disabled selected>読み込み中...</option>
+        </select>
+      </div>
+
+      <div class="mode-selector">
+        <label class="mode-option">
+          <input type="radio" name="mode" value="url" checked>
+          <span class="mode-chip"><span>URL</span></span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="text">
+          <span class="mode-chip"><span>Text</span></span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="mode" value="capture">
+          <span class="mode-chip"><span>Capture</span></span>
+        </label>
+      </div>
+
+      <div class="model-mode-selector">
+        <label class="model-mode-chip">
+          <input type="radio" name="model-mode" value="fast">
+          <div class="chip-content">
+            <span class="chip-label">高速</span>
+            <span class="chip-desc">素早く回答</span>
+          </div>
+        </label>
+        <label class="model-mode-chip">
+          <input type="radio" name="model-mode" value="thinking" checked>
+          <div class="chip-content">
+            <span class="chip-label">思考</span>
+            <span class="chip-desc">複雑な問題を解決</span>
+          </div>
+        </label>
+        <label class="model-mode-chip">
+          <input type="radio" name="model-mode" value="pro">
+          <div class="chip-content">
+            <span class="chip-label">Pro</span>
+            <span class="chip-desc">高度な推論</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="toggle-group">
+        <label class="toggle-switch">
+          <input type="checkbox" id="auto-execute-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label">Enterで自動送信</span>
+      </div>
+
+      <div id="prompt-info" class="prompt-info" style="display: none;">
+        <div class="info-section">
+          <h3>📋 推奨設定</h3>
+          <div id="recommended-settings" class="recommended-settings"></div>
+        </div>
+        <div class="info-section">
+          <h3>📝 後処理の説明</h3>
+          <div id="post-processing" class="post-processing"></div>
+        </div>
+      </div>
+
+      <button id="run-btn" class="primary-btn" disabled>Geminizeする</button>
+      <div id="status-message" class="status-message"></div>
+
+      <div id="prompt-copy" class="prompt-copy" style="display: none;">
+        <h3>✂️ プロンプトをコピー</h3>
+        <textarea id="prompt-copy-text" readonly></textarea>
+        <button id="copy-prompt-btn" class="secondary-btn">プロンプトをコピー</button>
+      </div>
+    </main>
+
+  </div>
+  <script src="../prompts/bundled.js"></script>
+  <script type="module" src="popup.js"></script>
+</body>
+
+</html>

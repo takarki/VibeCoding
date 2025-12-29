@@ -1,0 +1,137 @@
+{
+    "manifest_version": 3,
+    "name": "Geminizer",
+    "version": "0.9.34",
+    "_version_control": "Strictly enforce version control. Version format: MAJOR.MINOR.PATCH. Increment PATCH for bug fixes, MINOR for new features, MAJOR for breaking changes.",
+    "description": "Summarize YouTube videos and web pages using Gemini.",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "scripting",
+        "notifications",
+        "contextMenus"
+    ],
+    "host_permissions": [
+        "https://gemini.google.com/*",
+        "https://www.youtube.com/*"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/*"
+            ],
+            "js": [
+                "src/youtube_button_injector.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "https://gemini.google.com/*"
+            ],
+            "js": [
+                "src/gemini_enhancer.js"
+            ],
+            "run_at": "document_idle"
+        }
+    ],
+    "background": {
+        "service_worker": "src/background.js"
+    },
+    "action": {
+        "default_popup": "ui/popup.html",
+        "default_icon": {
+            "16": "icons/logo16.png",
+            "48": "icons/logo48.png",
+            "128": "icons/logo128.png"
+        }
+    },
+    "options_ui": {
+        "page": "ui/options.html",
+        "open_in_tab": true
+    },
+    "commands": {
+        "run_youtube_summary": {
+            "suggested_key": {
+                "default": "Ctrl+Shift+U",
+                "mac": "Command+Shift+U"
+            },
+            "description": "YouTube要約を作成"
+        },
+        "run_prompt_0": {
+            "description": "プロンプト0を実行"
+        },
+        "run_prompt_1": {
+            "description": "プロンプト1を実行"
+        },
+        "run_prompt_2": {
+            "description": "プロンプト2を実行"
+        },
+        "run_prompt_3": {
+            "description": "プロンプト3を実行"
+        },
+        "run_prompt_4": {
+            "description": "プロンプト4を実行"
+        },
+        "run_prompt_5": {
+            "description": "プロンプト5を実行"
+        },
+        "run_prompt_6": {
+            "description": "プロンプト6を実行"
+        },
+        "run_prompt_7": {
+            "description": "プロンプト7を実行"
+        },
+        "run_prompt_8": {
+            "description": "プロンプト8を実行"
+        },
+        "run_prompt_9": {
+            "description": "プロンプト9を実行"
+        },
+        "run_prompt_10": {
+            "description": "プロンプト10を実行"
+        },
+        "run_prompt_11": {
+            "description": "プロンプト11を実行"
+        },
+        "run_prompt_12": {
+            "description": "プロンプト12を実行"
+        },
+        "run_prompt_13": {
+            "description": "プロンプト13を実行"
+        },
+        "run_prompt_14": {
+            "description": "プロンプト14を実行"
+        },
+        "run_prompt_15": {
+            "description": "プロンプト15を実行"
+        },
+        "run_prompt_16": {
+            "description": "プロンプト16を実行"
+        },
+        "run_prompt_17": {
+            "description": "プロンプト17を実行"
+        },
+        "run_prompt_18": {
+            "description": "プロンプト18を実行"
+        },
+        "run_prompt_19": {
+            "description": "プロンプト19を実行"
+        }
+    },
+    "icons": {
+        "16": "icons/logo16.png",
+        "48": "icons/logo48.png",
+        "128": "icons/logo128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "prompts/*.js"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

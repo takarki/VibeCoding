@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geminizer 使い方ガイド</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #202124;
+            line-height: 1.6;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 6px 2px rgba(60, 64, 67, 0.15), 0 8px 24px 4px rgba(60, 64, 67, 0.15);
+            padding: 40px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e8eaed;
+        }
+        h1 {
+            font-size: 32px;
+            background: linear-gradient(135deg, #4285f4 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .help-section {
+            margin-bottom: 32px;
+        }
+        .help-section h3 {
+            font-size: 20px;
+            color: #4285f4;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .help-section p {
+            font-size: 15px;
+            color: #5f6368;
+            margin-bottom: 12px;
+        }
+        .help-section ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+        .help-section li {
+            font-size: 15px;
+            color: #5f6368;
+            margin-bottom: 8px;
+        }
+        .help-section strong {
+            color: #202124;
+        }
+        .feature-box {
+            background: #f8f9fa;
+            border-left: 4px solid #4285f4;
+            padding: 16px;
+            margin: 16px 0;
+            border-radius: 8px;
+        }
+        .feature-box h4 {
+            color: #202124;
+            margin-bottom: 8px;
+        }
+        .feature-box p {
+            color: #5f6368;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Geminizer 使い方ガイド</h1>
+            <p style="color: #5f6368; font-size: 16px;">WebページをAIで分析・要約するChrome拡張機能</p>
+        </header>
+
+        <div class="help-section">
+            <h3>⚙️ 設定 (Settings)</h3>
+            <p>右上の歯車アイコンから設定画面を開けます。プロンプトの追加・編集・削除が可能です。</p>
+            <div class="feature-box">
+                <h4>プロンプト編集機能</h4>
+                <p>各プロンプトで以下の設定が可能です：</p>
+                <ul>
+                    <li>思考モード（デフォルト/高速モード/思考モード）</li>
+                    <li>Geminiツール（Deep Research、動画作成、画像作成、Canvas、ガイド付き学習）</li>
+                    <li>デフォルトコンテンツモード（URL/Text/Capture）</li>
+                    <li>カスタムGEM URL（特定の用途のGEMに対して投げる）</li>
+                    <li>自動実行の有効/無効</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h3>📝 モード選択</h3>
+            <p>コンテンツの取得方法を選択できます：</p>
+            <ul>
+                <li><strong>URL</strong>: リンクとタイトルのみを使用</li>
+                <li><strong>Text</strong>: ページ本文も抽出して使用</li>
+                <li><strong>Capture</strong>: ページ全体をスクロールして1枚のキャプチャーを取得し、Geminiで画像分析</li>
+            </ul>
+            <div class="feature-box">
+                <h4>プロンプトごとのデフォルト設定</h4>
+                <p>各プロンプトにデフォルトコンテンツモードを設定できます。プロンプトを選択すると、自動的にそのモードが選択されます。</p>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h3>🚀 実行</h3>
+            <p>「Geminizeする」をクリックすると、以下の動作が実行されます：</p>
+            <ul>
+                <li>選択したプロンプトに基づいてコンテンツを取得</li>
+                <li>Gemini（または指定したGEM URL）を開く</li>
+                <li>思考モードやツールを自動設定</li>
+                <li>プロンプトを自動入力</li>
+                <li>自動実行が有効な場合は自動送信</li>
+            </ul>
+        </div>
+
+        <div class="help-section">
+            <h3>🎯 主な機能</h3>
+            <div class="feature-box">
+                <h4>ページ全体キャプチャー</h4>
+                <p>Captureモードでは、ページを自動スクロールしながら複数のキャプチャーを取得し、1枚の画像として結合します。画像はGeminiに自動的に貼り付けられ、分析されます。</p>
+            </div>
+            <div class="feature-box">
+                <h4>コンテンツ検証</h4>
+                <p>実行前にURL、タイトル、コンテンツが正しく取得できているか検証します。問題がある場合は、手動でコピー&ペーストする方法を案内します。</p>
+            </div>
+            <div class="feature-box">
+                <h4>カスタムGEM URL</h4>
+                <p>特定の用途のGEMに対して直接プロンプトを送信できます。プロンプト編集画面でGEM URLを指定してください。</p>
+            </div>
+        </div>
+
+        <div class="help-section">
+            <h3>💡 ヒント</h3>
+            <ul>
+                <li>YouTube動画の要約では、タイムスタンプが自動的にリンクに変換されます</li>
+                <li>思考モードは複雑なトピックの分析に適しています</li>
+                <li>高速モードは素早い回答が必要な場合に使用してください</li>
+                <li>プロンプトには変数（{{url}}, {{title}}, {{content}}）を使用できます</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
