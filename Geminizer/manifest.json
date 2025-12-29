@@ -21,7 +21,8 @@
                 "https://www.youtube.com/*"
             ],
             "js": [
-                "src/youtube_button_injector.js"
+                "src/youtube_button_injector.js",
+                "src/youtube_image_capture.js"
             ],
             "run_at": "document_idle"
         },
@@ -30,7 +31,17 @@
                 "https://gemini.google.com/*"
             ],
             "js": [
+                "src/ai_injector.js",
                 "src/gemini_enhancer.js"
+            ],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "src/content_extractor.js"
             ],
             "run_at": "document_idle"
         }

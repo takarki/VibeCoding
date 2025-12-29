@@ -17,6 +17,20 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
 
+  if (message.action === 'captureVisibleTab') {
+    handleCaptureVisibleTab(message, sender, sendResponse);
+    return true;
+  }
+
+  if (message.action === 'captureYouTubeImage') {
+    handleCaptureYouTubeImage(message, sender, sendResponse);
+    return true;
+  }
+
+  if (message.action === 'setupImageContextMenu') {
+    setupYouTubeImageContextMenu();
+  }
+
   return false;
 });
 
@@ -34,18 +48,18 @@ chrome.commands.onCommand.addListener((command) => {
 
 // Handle context menu clicks
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId === 'geminize-selection') {
+  if (info.menuItemId === 'geminize-youtube-thumbnail') {
+    handleYouTubeImageCapture(tab, 'thumbnail');
+  } else if (info.menuItemId === 'geminize-youtube-screenshot') {
+    handleYouTubeImageCapture(tab, 'screenshot');
+  } else if (info.menuItemId === 'geminize-selection') {
     handleContextMenuGeminize(info, tab);
   }
 });
 
 // Create context menu on install
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: 'geminize-selection',
-    title: '選択テキストをGeminiで分析',
-    contexts: ['selection']
-  });
+  setupYouTubeImageContextMenu();
 });
 
 /**
@@ -261,4 +275,108 @@ function buildPromptText(template, url, title, content) {
     .replace(/\{\{url\}\}/g, url || '')
     .replace(/\{\{title\}\}/g, title || '')
     .replace(/\{\{content\}\}/g, content || '');
+}
+
+/**
+ * Handle capture visible tab request
+ */
+async function handleCaptureVisibleTab(message, sender, sendResponse) {
+  try {
+    const dataUrl = await chrome.tabs.captureVisibleTab(null, { format: 'jpeg' });
+    sendResponse({ success: true, imageData: dataUrl });
+  } catch (error) {
+    console.error('[Geminizer Background] Capture visible tab failed:', error);
+    sendResponse({ success: false, error: error.message });
+  }
+}
+
+/**
+ * Handle YouTube image capture
+ */
+async function handleCaptureYouTubeImage(message, sender, sendResponse) {
+  try {
+    // The actual capture is done by youtube_image_capture.js content script
+    // This just facilitates the communication
+    sendResponse({ success: true });
+  } catch (error) {
+    sendResponse({ success: false, error: error.message });
+  }
+}
+
+/**
+ * Setup YouTube image context menu
+ */
+function setupYouTubeImageContextMenu() {
+  try {
+    // Remove existing context menu items
+    chrome.contextMenus.removeAll(() => {
+      // Create new context menu
+      chrome.contextMenus.create({
+        id: 'geminize-youtube-thumbnail',
+        title: 'サムネイルから要約',
+        contexts: ['page'],
+        documentUrlPattern: 'https://www.youtube.com/watch*'
+      });
+
+      chrome.contextMenus.create({
+        id: 'geminize-youtube-screenshot',
+        title: '画面から要約',
+        contexts: ['page'],
+        documentUrlPattern: 'https://www.youtube.com/watch*'
+      });
+
+      chrome.contextMenus.create({
+        id: 'geminize-selection',
+        title: '選択テキストをGeminiで分析',
+        contexts: ['selection']
+      });
+    });
+  } catch (error) {
+    console.error('[Geminizer Background] Error setting up context menu:', error);
+  }
+}
+
+/**
+ * Handle YouTube image capture from context menu
+ */
+async function handleYouTubeImageCapture(tab, imageType) {
+  try {
+    // Load YouTube summary prompt
+    const data = await chrome.storage.local.get('prompts');
+    const prompts = data.prompts || [];
+    const youtubePrompt = prompts.find(p => p.title.includes('YouTube') || p.title.includes('要約'));
+
+    if (!youtubePrompt) {
+      console.error('[Geminizer Background] YouTube summary prompt not found');
+      return;
+    }
+
+    // Capture image from YouTube page
+    chrome.tabs.sendMessage(tab.id, {
+      action: 'captureYouTubeImage',
+      imageType: imageType
+    }, (response) => {
+      if (chrome.runtime.lastError) {
+        console.error('[Geminizer Background] Failed to capture image:', chrome.runtime.lastError);
+        return;
+      }
+
+      if (response && response.success && response.imageData) {
+        // Send to Gemini with image
+        handleRunPrompt({
+          prompt: youtubePrompt,
+          tabId: tab.id,
+          tabUrl: tab.url,
+          tabTitle: tab.title,
+          modelMode: 'thinking',
+          autoExecute: true,
+          imageDataUrl: response.imageData,
+          manualImagePaste: false
+        }, () => {});
+      }
+    });
+
+  } catch (error) {
+    console.error('[Geminizer Background] Error in handleYouTubeImageCapture:', error);
+  }
 }
